@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("CanvasContainer.css");
+@import url("Panel.css");
+@import url("ComponentContainer.css");
+@import url("Component.css");
+body {
+  margin: 0;
+  padding: 0;
+}
+#root {
+  display: grid;
+  grid-template-columns: auto 300px;
+  width: 100vw;
+  height: 100vh;
+}
