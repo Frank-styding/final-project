@@ -1,5 +1,5 @@
 export class LineStyle {
-  constructor({ lineCap, lineWidth, lineJoin, miterLimit }) {
+  constructor({ lineCap, lineWidth, lineJoin, miterLimit } = {}) {
     this.lineCap = lineCap ?? "butt";
     this.lineJoin = lineJoin ?? "bevel";
     this.lineWidth = lineWidth ?? 1;

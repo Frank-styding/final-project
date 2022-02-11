@@ -1,10 +1,15 @@
-import Component from "./Component.js";
-import Display from "../Display/Display.js";
+import { RectCollider } from "../modules/Engine/Colliders/exports.js";
+import { Component } from "../modules/Engine/Components/exports.js";
+import { Display } from "../modules/Engine/Display/exports.js";
+import { State } from "../modules/Engine/exports.js";
+import {
+  DisplayStyle,
+  Color,
+} from "../modules/Engine/Display/DisplayStyle/exports.js";
 
-import { Color, DisplayStyle } from "../Display/DisplayStyle/exports.js";
-import { RectCollider } from "../Colliders/exports.js";
-import { State } from "../State/State.js";
 import C_Celd from "./Celd.js";
+import C_CeldConectionIndicator from "./Celds/CeldConectionIndicator.js";
+import C_CeldConectionPath from "./Celds/CeldConectionPath.js";
 
 export class C_Board extends Component {
   constructor(celd_size, grid_width, grid_height) {
@@ -36,7 +41,9 @@ export class C_Board extends Component {
     const gridHeight = this.gridHeight.getValue();
 
     for (let i = 0; i < gridHeight * gridWidth; i++) {
-      this.addChild(new C_Celd(this.celdSize.getValue()));
+      this.addChild(
+        new C_CeldConectionPath(this.celdSize.getValue(), ["left", "top"])
+      );
     }
   }
 
