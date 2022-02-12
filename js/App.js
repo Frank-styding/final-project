@@ -71,26 +71,6 @@ export class App {
     }
   }
 
-  /*  getImagesSrc() {
-    if (this.db.level1.panelComponents) {
-      let datas = this.db.level1.panelComponents;
-      const celdSize = this.db.level1.celdSize;
-
-      return datas.map((data) => {
-        if (data.name == "battery") {
-          return C_Battery.getImage([
-            celdSize,
-            data.activeConections,
-            data.value,
-          ]);
-        }
-        if (data.name == "conectionPath") {
-          return C_ConectionPath.getImage([celdSize, data.activeConections]);
-        }
-      });
-    }
-    return [];
-  } */
   getPanelComponents() {
     if (this.db.level1.panelComponents) {
       let datas = this.db.level1.panelComponents;

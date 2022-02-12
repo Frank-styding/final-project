@@ -9,6 +9,22 @@ export class DT_ComponentContainer extends DOMTemplate {
       childs: [
         {
           tagName: "div",
+          className: "btn-container",
+          childs: [
+            {
+              tagName: "div",
+              className: "btn eraser",
+              innerHTML: "eraser",
+            },
+            {
+              tagName: "div",
+              className: "btn reset",
+              innerHTML: "reset",
+            },
+          ],
+        },
+        {
+          tagName: "div",
           className: "container",
           childs: data.map((component) => new DT_Component(component)),
         },

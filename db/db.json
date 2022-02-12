@@ -4,7 +4,7 @@
         "gridHeight":5,
         "celdSize":100,
         "panelComponents":[
-            {"name":"battery","activeConections":["top","left"]},
+            {"name":"battery","activeConections":["top","left"],"value":false},
             {"name":"conectionPath","activeConections":["bottom","left"]},
             {"name":"conectionPath","activeConections":["bottom","left"]},
             {"name":"conectionPath","activeConections":["bottom","left"]}
