@@ -24,6 +24,10 @@
   font-family: Roboto;
   user-select: none;
 }
+.component-container > .btn-container > .btn.selected {
+  background-color: #535353 !important;
+}
+
 .component-container > .btn-container > .btn:hover {
   background-color: #444444;
 }

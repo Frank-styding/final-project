@@ -14,11 +14,13 @@ export class DT_ComponentContainer extends DOMTemplate {
             {
               tagName: "div",
               className: "btn eraser",
+              id: "eraser",
               innerHTML: "eraser",
             },
             {
               tagName: "div",
               className: "btn reset",
+              id: "reset",
               innerHTML: "reset",
             },
           ],
@@ -29,6 +31,29 @@ export class DT_ComponentContainer extends DOMTemplate {
           childs: data.map((component) => new DT_Component(component)),
         },
       ],
+    });
+
+    this.childs[0].childs[0].template.on("click", (event) => {
+      event.stopPropagation();
+      this.glovalEvents.trigger("btn-eraser-click");
+    });
+    this.childs[0].childs[1].template.on("click", (event) => {
+      event.stopPropagation();
+      this.glovalEvents.trigger("btn-reset-click");
+    });
+
+    this.glovalEvents.on("select-eraser-btn", () => {
+      this.childs[0].childs[0].template.addClass("selected");
+    });
+    this.glovalEvents.on("unselect-eraser-btn", () => {
+      this.childs[0].childs[0].template.removeClass("selected");
+    });
+
+    this.glovalEvents.on("select-reset-btn", () => {
+      this.childs[0].childs[1].template.addClass("selected");
+    });
+    this.glovalEvents.on("unselect-reset-btn", () => {
+      this.childs[0].childs[1].template.removeClass("selected");
     });
   }
 }

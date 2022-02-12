@@ -21,16 +21,18 @@ export class C_Battery extends C_ConectionIndicator {
       })()
     );
     this.className = "Battery";
+    this.state = value ? "Charged" : "Discharged";
     this.value = new State(value);
-
+    this.loadUpdateFuncs();
+    this.updateActiveConections();
+    this.render();
+  }
+  loadUpdateFuncs() {
     this.value.onUpdate(() => {
       this.updateActiveConections();
       this.render();
       this.events.trigger("update");
     }, "battery");
-
-    this.updateActiveConections();
-    this.render();
   }
   updateActiveConections() {
     const activeContions = this.activeConections.getValue();

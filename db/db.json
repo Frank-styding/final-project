@@ -26,13 +26,13 @@
             "gridHeight":6,
             "celdSize":80,
             "panelComponents":[
-                {"name":"battery","activeConections":["top","left"],"value":false},
                 {"name":"conectionPath","activeConections":["bottom","left"]},
                 {"name":"conectionPath","activeConections":["top","left"]},
                 {"name":"conectionPath","activeConections":["top","right"]},
                 {"name":"conectionPath","activeConections":["bottom","right"]},
                 {"name":"conectionPath","activeConections":["left","right"]},
-                {"name":"conectionPath","activeConections":["top","bottom"]}
+                {"name":"conectionPath","activeConections":["top","bottom"]},
+                {"name":"conectionPath","activeConections":["top","left","right"]}
             ],
             "data":[
                 {"name":"battery","activeConections":["bottom"],"value":false},{},{},{},{},{"name":"battery","activeConections":["bottom"],"value":true},
@@ -40,7 +40,7 @@
                 {},{},{},{},{},{},
                 {},{},{},{},{},{},
                 {},{},{},{},{},{},
-                {},{},{},{},{},{}
+                {"name":"battery","activeConections":["top"],"value":false},{},{},{},{},{}
             ]
         }
     ]

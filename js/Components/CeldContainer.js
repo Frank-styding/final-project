@@ -55,6 +55,7 @@ export class C_CeldContainer extends Component {
   }
   clearCeld() {
     this.child._value = undefined;
+    this.render();
   }
   loadUpdateFuncs() {
     this.events.on("mouseOver", () => {

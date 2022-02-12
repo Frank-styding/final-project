@@ -8,6 +8,8 @@ import DT_CanvasContainer from "./DOMTemplateComponents/CanvasContainer/CanvasCo
 import DT_Panel from "./DOMTemplateComponents/Panel/Panel.js";
 import DT_ComponentContainer from "./DOMTemplateComponents/Components/ComponentContainer.js";
 import C_ConectionPath from "./Components/Celds/ConectionPath.js";
+import DisplayStyle from "./modules/Engine/Display/DisplayStyle/DisplayStyle.js";
+import TextStyle from "./modules/Engine/Display/DisplayStyle/TextStyle.js";
 
 export class App {
   constructor(db) {
@@ -19,6 +21,10 @@ export class App {
     this.eraser = false;
 
     this.currentLevel = 1;
+    this.levelData = this.db.levels[this.currentLevel].data;
+    this.celdSize = this.db.levels[this.currentLevel].celdSize;
+    this.gridWidth = this.db.levels[this.currentLevel].gridWidth;
+    this.gridHeight = this.db.levels[this.currentLevel].gridHeight;
 
     this.templateRoot = this.createTemplate();
     this.templateRoot.setGlovalEvents();
@@ -27,6 +33,7 @@ export class App {
     this.controller = this.createController();
 
     this.loadComponents();
+    this.loadDomInteraction();
   }
 
   createTemplate() {
@@ -61,18 +68,24 @@ export class App {
     this.board.update();
     this.display.renderComponent(this.board);
 
+    this.display.text(
+      this.display.width / 2,
+      this.display.height - 50,
+      "level" + this.currentLevel,
+      new DisplayStyle({
+        textStyle: new TextStyle({
+          textAlign: "center",
+          textBaseline: "middle",
+          font: "30px Roboto",
+        }),
+      })
+    );
     if (this.run) {
       requestAnimationFrame(this.loop.bind(this));
     }
   }
   stop() {
     this.run = false;
-  }
-
-  getImageSrc(component) {
-    if (component.display) {
-      return component.display.canvas.toDataURL("base64");
-    }
   }
 
   getPanelComponents() {
@@ -96,11 +109,7 @@ export class App {
   }
 
   loadComponents() {
-    this.board = new C_Board(
-      this.db.levels[this.currentLevel].celdSize,
-      this.db.levels[this.currentLevel].gridWidth,
-      this.db.levels[this.currentLevel].gridHeight
-    );
+    this.board = new C_Board(this.celdSize, this.gridWidth, this.gridHeight);
     this.board.transform.setValue((transform) => {
       transform.model.translate(
         this.display.width / 2,
@@ -108,41 +117,22 @@ export class App {
       );
       return transform;
     });
-    this.controller.setMouseInteraction(this.board);
-
-    this.db.levels[this.currentLevel].data.forEach((data, idx) => {
+    this.levelData.forEach((data, idx) => {
       if (data.name) {
-        if (data.name == "battery") {
-          this.board.grid[idx].setCeld(data.name, [
-            data.activeConections,
-            data.value,
-          ]);
-        } else {
-          this.board.grid[idx].setCeld(data.name, [data.activeConections]);
+        switch (data.name) {
+          case "battery":
+            this.board.grid[idx].setCeld(data.name, [
+              data.activeConections,
+              data.value,
+            ]);
+            break;
+          default:
+            this.board.grid[idx].setCeld(data.name, [data.activeConections]);
+            break;
         }
       }
     });
-
-    this.templateRoot.glovalEvents.on("selected-component", (data) => {
-      this.panelSelectedComponent = data;
-      console.log(this.panelSelectedComponent);
-    });
-
-    this.templateRoot.glovalEvents.on("panel-click", () => {
-      this.panelSelectedComponent = undefined;
-    });
-
-    this.board.events.on("mouseDown", (event) => {
-      let celd = event.target;
-      if (this.panelSelectedComponent) {
-        celd.setCeld(
-          this.panelSelectedComponent.name,
-          this.panelSelectedComponent.props
-        );
-        this.updateCeldsState();
-      }
-    });
-
+    this.controller.setMouseInteraction(this.board);
     this.updateCeldsState();
   }
 
@@ -150,6 +140,7 @@ export class App {
     let grid = this.board.grid;
     const gridWidth = this.board.gridWidth.getValue();
     const gridHeight = this.board.gridHeight.getValue();
+
     let getCeld = (x, y) => {
       if (!(x >= 0 && y >= 0 && x < gridWidth && y < gridHeight))
         return undefined;
@@ -159,6 +150,7 @@ export class App {
       }
       return undefined;
     };
+
     let celds = [];
     for (let y = 0; y < gridHeight; y++) {
       for (let x = 0; x < gridWidth; x++) {
@@ -180,51 +172,35 @@ export class App {
         }
       }
     }
+
+    let inverDirection = (direction) => {
+      if (direction == "top") return "bottom";
+      if (direction == "bottom") return "top";
+      if (direction == "left") return "right";
+      if (direction == "right") return "left";
+    };
+
     for (let celd of celds) {
       celd.directions.forEach((direction) => {
-        switch (direction) {
-          case "top":
-            let top = celds.filter(
-              (item) => item.x == celd.x && item.y == celd.y - 1
-            );
-            if (top.length > 0 && top[0].directions.indexOf("bottom") != -1) {
-              celd.top = top[0];
-              top[0].bottom = celd;
-            }
-            break;
-          case "bottom":
-            let bottom = celds.filter(
-              (item) => item.x == celd.x && item.y == celd.y + 1
-            );
-            if (
-              bottom.length > 0 &&
-              bottom[0].directions.indexOf("top") != -1
-            ) {
-              celd.bottom = bottom[0];
-              bottom[0].top = celd;
-            }
-            break;
-          case "left":
-            let left = celds.filter(
-              (item) => item.x == celd.x - 1 && item.y == celd.y
-            );
-            if (left.length > 0 && left[0].directions.indexOf("right") != -1) {
-              celd.left = left[0];
-              left[0].right = celd;
-            }
-            break;
-          case "right":
-            let right = celds.filter(
-              (item) => item.x == celd.x + 1 && item.y == celd.y
-            );
-            if (right.length > 0 && right[0].directions.indexOf("left") != -1) {
-              celd.right = right[0];
-              right[0].left = celd;
-            }
-            break;
+        let pos = {
+          x:
+            celd.x +
+            (direction === "left" ? -1 : direction === "right" ? 1 : 0),
+          y:
+            celd.y +
+            (direction === "top" ? -1 : direction === "bottom" ? 1 : 0),
+        };
+        let list = celds.filter((item) => item.x === pos.x && item.y === pos.y);
+        if (
+          list.length > 0 &&
+          list[0].directions.indexOf(inverDirection(direction)) != -1
+        ) {
+          celd[direction] = list[0];
+          list[0][inverDirection(direction)] = celd;
         }
       });
     }
+
     let equal = (a, b) => {
       if (a.length != b.length) {
         return false;
@@ -242,6 +218,7 @@ export class App {
       }
       return true;
     };
+
     let trees = [];
     for (let celd of celds) {
       let list = [celd];
@@ -249,27 +226,26 @@ export class App {
 
       while (list.length > 0) {
         let item = list.pop();
+
+        let addItemInList = (item) => {
+          if (list1.indexOf(item) == -1) {
+            list.push(item);
+          }
+        };
+
         if (list1.indexOf(item) == -1) {
           list1.push(item);
           if (item.top) {
-            if (list1.indexOf(item.top) == -1) {
-              list.push(item.top);
-            }
+            addItemInList(item.top);
           }
           if (item.bottom) {
-            if (list1.indexOf(item.bottom) == -1) {
-              list.push(item.bottom);
-            }
-          }
-          if (item.left) {
-            if (list1.indexOf(item.left) == -1) {
-              list.push(item.left);
-            }
+            addItemInList(item.bottom);
           }
           if (item.right) {
-            if (list1.indexOf(item.right) == -1) {
-              list.push(item.right);
-            }
+            addItemInList(item.right);
+          }
+          if (item.left) {
+            addItemInList(item.left);
           }
         }
       }
@@ -278,16 +254,76 @@ export class App {
         trees.push(list1);
       }
     }
+
     trees.forEach((tree) => {
       let activeTree =
         tree.filter(
           (item) =>
-            item.celd.className == "Battery" && item.celd.value.getValue()
+            item.celd.className == "Battery" &&
+            item.celd.value.getValue() &&
+            item.celd.state == "Charged"
         ).length > 0;
 
       tree.forEach((item) => {
         item.celd.value.setValue(activeTree);
       });
+    });
+  }
+
+  reset() {
+    this.loadComponents();
+    this.loadDomInteraction();
+  }
+
+  loadDomInteraction() {
+    this.templateRoot.glovalEvents.on("selected-component", (data) => {
+      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
+      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
+      this.panelSelectedComponent = data;
+      this.eraser = false;
+    });
+    this.templateRoot.glovalEvents.on("btn-reset-click", () => {
+      this.templateRoot.glovalEvents.trigger("unselect-components");
+      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
+      this.templateRoot.glovalEvents.trigger("select-reset-btn");
+      this.reset();
+    });
+    this.templateRoot.glovalEvents.on("btn-eraser-click", () => {
+      this.templateRoot.glovalEvents.trigger("unselect-components");
+      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
+      this.templateRoot.glovalEvents.trigger("select-eraser-btn");
+      this.panelSelectedComponent = undefined;
+      this.eraser = true;
+    });
+    this.templateRoot.glovalEvents.on("panel-click", () => {
+      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
+      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
+      this.panelSelectedComponent = undefined;
+      this.eraser = false;
+    });
+    this.board.events.on("mouseDown", (event) => {
+      let celd = event.target;
+      let isInitalCeld = false;
+      this.board.grid.forEach((item, idx) => {
+        if (item == celd) {
+          if (this.db.levels[this.currentLevel].data[idx].name) {
+            isInitalCeld = true;
+          }
+        }
+      });
+      if (!isInitalCeld) {
+        if (this.eraser) {
+          celd.clearCeld();
+          this.updateCeldsState();
+        }
+        if (this.panelSelectedComponent) {
+          celd.setCeld(
+            this.panelSelectedComponent.name,
+            this.panelSelectedComponent.props
+          );
+          this.updateCeldsState();
+        }
+      }
     });
   }
 }

@@ -31,6 +31,7 @@ export class DT_Component extends DOMTemplate {
       this.template.addClass("selected");
       this.glovalEvents.trigger("selected-component", [data, this]);
     });
+    this.template.on("dragstart", () => false);
   }
 }
 export default DT_Component;

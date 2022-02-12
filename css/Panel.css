@@ -1,5 +1,6 @@
 .panel {
   background-color: #232323;
+  user-select: none;
 }
 .panel > .title-container {
   display: flex;

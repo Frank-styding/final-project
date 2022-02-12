@@ -66,7 +66,6 @@ export class C_Board extends Component {
       }
     }
   }
-
   render() {
     const width = this.width.getValue();
     const height = this.height.getValue();

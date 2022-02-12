@@ -22,15 +22,17 @@ export class C_ConectionPath extends C_ConectionIndicator {
     );
     this.className = "ConectionPath";
     this.value = new State(false);
-
+    this.loadUpdateFuncs();
+    this.updateActiveConections();
+    this.render();
+  }
+  loadUpdateFuncs() {
+    super.loadUpdateFuncs();
     this.value.onUpdate(() => {
       this.updateActiveConections();
       this.render();
       this.events.trigger("update");
     }, "conectionPath");
-
-    this.updateActiveConections();
-    this.render();
   }
   updateActiveConections() {
     const activeContions = this.activeConections.getValue();
