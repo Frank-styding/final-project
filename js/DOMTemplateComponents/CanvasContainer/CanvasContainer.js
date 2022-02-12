@@ -1,4 +1,4 @@
-import DOMTemplate from "../DOMTemplate.js";
+import { DOMTemplate } from "../../modules/DOMTemplate/exports.js";
 export class DT_CanvasContainer extends DOMTemplate {
   constructor() {
     super({

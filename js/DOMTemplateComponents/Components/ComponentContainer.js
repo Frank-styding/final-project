@@ -1,4 +1,4 @@
-import { DOMTemplate } from "../DOMTemplate.js";
+import { DOMTemplate } from "../../modules/DOMTemplate/exports.js";
 import { DT_Component } from "./Component.js";
 
 export class DT_ComponentContainer extends DOMTemplate {

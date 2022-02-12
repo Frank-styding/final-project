@@ -1,3 +1,18 @@
 {
-    "hola":"Hola"
+    "level1" :{
+        "gridWidth":5,
+        "gridHeight":5,
+        "celdSize":150,
+        "panelComponents":[
+            {"name":"battery","activeConections":["top","left"]},
+            {"name":"conectionPath","activeConections":["bottom","left"]}
+        ],
+        "data":[
+            {},{},{},{},{"name":"battery","activeConections":["top","left"]},
+            {},{},{},{"name":"conectionPath","activeConections":["top","left"]},{},
+            {},{},{},{},{},
+            {},{},{},{},{},
+            {},{},{},{},{}
+        ]
+    }
 }

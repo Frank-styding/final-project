@@ -7,13 +7,17 @@ import {
   Color,
 } from "../modules/Engine/Display/DisplayStyle/exports.js";
 
-import C_Celd from "./Celd.js";
-import C_CeldConectionIndicator from "./Celds/CeldConectionIndicator.js";
-import C_CeldConectionPath from "./Celds/CeldConectionPath.js";
+import C_CeldContainer from "./CeldContainer.js";
+import C_ConectionIndicator from "./Celds/ConectionIndicator.js";
+import C_ConectionPath from "./Celds/ConectionPath.js";
+
+/* import C_CeldConectionIndicator from "./Celds/CeldConectionIndicator.js";
+import C_CeldConectionPath from "./Celds/CeldConectionPath.js"; */
 
 export class C_Board extends Component {
   constructor(celd_size, grid_width, grid_height) {
     super();
+    this.className = "Board";
     this.display = new Display({
       width: celd_size * grid_width,
       height: celd_size * grid_height,
@@ -39,14 +43,14 @@ export class C_Board extends Component {
   createCelds() {
     const gridWidth = this.gridWidth.getValue();
     const gridHeight = this.gridHeight.getValue();
-
+    const celdSize = this.celdSize.getValue();
+    this.grid = new Array(gridWidth * gridHeight).fill(undefined);
     for (let i = 0; i < gridHeight * gridWidth; i++) {
-      this.addChild(
-        new C_CeldConectionPath(this.celdSize.getValue(), ["left", "top"])
-      );
+      let celd = new C_CeldContainer(celdSize);
+      this.grid[i] = celd;
+      this.addChild(celd);
     }
   }
-
   alignCelds() {
     const gridWidth = this.gridWidth.getValue();
     const gridHeight = this.gridHeight.getValue();
@@ -68,7 +72,6 @@ export class C_Board extends Component {
       }
     }
   }
-
   loadUpdateFuncs() {}
   render() {
     const width = this.width.getValue();

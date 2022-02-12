@@ -9,6 +9,7 @@ export class Component {
 
     this.id = Component.ID;
     this.name = "";
+    this.className = "Component";
 
     this.display = undefined;
     this.collider = new State(undefined);

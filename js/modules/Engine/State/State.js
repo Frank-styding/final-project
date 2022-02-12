@@ -4,8 +4,13 @@ export class State {
     this.events = [];
   }
 
-  onUpdate(func) {
-    this.events.push(func);
+  onUpdate(func, name = "") {
+    if (name != "") {
+      if (this.events.filter((item) => item.name == name).length > 0) {
+        return;
+      }
+    }
+    this.events.push({ name, func });
   }
 
   setValue(a, b = null) {
@@ -14,7 +19,7 @@ export class State {
       _value = a(_value);
       if (!this.equal(_value, this._value)) {
         this._value = a(this._value);
-        this.events.forEach((func) => func());
+        this.events.forEach((event) => event.func(this._value));
       }
       return;
     }
@@ -29,7 +34,7 @@ export class State {
 
         if (!this.equal(_value[a[a.length - 1]], b)) {
           _value[a[a.length - 1]] = b;
-          this.events.forEach((func) => func());
+          this.events.forEach((event) => event.func(this._value));
         }
 
         return;
@@ -37,14 +42,14 @@ export class State {
 
       if (!this.equal(this._value[a], b)) {
         this._value[a] = b;
-        this.events.forEach((func) => func());
+        this.events.forEach((event) => event.func(this._value));
       }
       return;
     }
 
     if (!this.equal(a, this._value)) {
-      this.events.forEach((func) => func());
       this._value = a;
+      this.events.forEach((event) => event.func(this._value));
     }
   }
 

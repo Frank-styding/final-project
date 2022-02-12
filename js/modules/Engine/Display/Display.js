@@ -126,13 +126,14 @@ export class Display {
 
     let start = true;
 
-    for (const vec of path) {
+    displayStyle.setToContext(this.ctx);
+    for (let vec of path) {
       if (start) {
         this.ctx.moveTo(vec.x, vec.y);
         start = false;
       }
 
-      this.ctx.lineTo(vec.x, vex.y);
+      this.ctx.lineTo(vec.x, vec.y);
     }
 
     if (closePath) {

@@ -1,4 +1,4 @@
-import { DOMTemplate } from "../DOMTemplate.js";
+import { DOMTemplate } from "../../modules/DOMTemplate/exports.js";
 
 export class DT_Component extends DOMTemplate {
   constructor(data) {
@@ -6,12 +6,12 @@ export class DT_Component extends DOMTemplate {
       tagName: "div",
       className: "component",
       childs: [
-        /* {
+        {
           tagName: "img",
           attributes: {
             src: data.src,
           },
-        }, */
+        },
       ],
     });
     this.data = data;
