@@ -11,7 +11,7 @@ export class C_ConectionPath extends C_ConectionIndicator {
   static getImage = (props) => {
     return new C_ConectionPath(...props).display.canvas.toDataURL("base64");
   };
-  constructor(celdSize, activeConections = []) {
+  constructor(celdSize, activeConections = [], value = false) {
     super(
       celdSize,
       (() => {
@@ -21,7 +21,7 @@ export class C_ConectionPath extends C_ConectionIndicator {
       })()
     );
     this.className = "ConectionPath";
-    this.value = new State(false);
+    this.value = new State(value);
     this.loadUpdateFuncs();
     this.updateActiveConections();
     this.render();

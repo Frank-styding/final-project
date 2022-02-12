@@ -20,7 +20,7 @@ export class App {
     this.panelSelectedComponent = undefined;
     this.eraser = false;
 
-    this.currentLevel = 1;
+    this.currentLevel = 0;
     this.levelData = this.db.levels[this.currentLevel].data;
     this.celdSize = this.db.levels[this.currentLevel].celdSize;
     this.gridWidth = this.db.levels[this.currentLevel].gridWidth;
@@ -71,7 +71,7 @@ export class App {
     this.display.text(
       this.display.width / 2,
       this.display.height - 50,
-      "level" + this.currentLevel,
+      "level " + (this.currentLevel + 1),
       new DisplayStyle({
         textStyle: new TextStyle({
           textAlign: "center",
@@ -87,7 +87,12 @@ export class App {
   stop() {
     this.run = false;
   }
+  reset() {
+    this.loadComponents();
+    this.loadDomInteraction();
+  }
 
+  //load
   getPanelComponents() {
     if (this.db.levels[this.currentLevel].panelComponents) {
       let _data = this.db.levels[this.currentLevel].panelComponents;
@@ -107,7 +112,6 @@ export class App {
       });
     }
   }
-
   loadComponents() {
     this.board = new C_Board(this.celdSize, this.gridWidth, this.gridHeight);
     this.board.transform.setValue((transform) => {
@@ -135,7 +139,6 @@ export class App {
     this.controller.setMouseInteraction(this.board);
     this.updateCeldsState();
   }
-
   updateCeldsState() {
     let grid = this.board.grid;
     const gridWidth = this.board.gridWidth.getValue();
@@ -268,13 +271,11 @@ export class App {
         item.celd.value.setValue(activeTree);
       });
     });
-  }
 
-  reset() {
-    this.loadComponents();
-    this.loadDomInteraction();
+    if (this.levelIsComplete()) {
+      this.updateLevel();
+    }
   }
-
   loadDomInteraction() {
     this.templateRoot.glovalEvents.on("selected-component", (data) => {
       this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
@@ -325,5 +326,37 @@ export class App {
         }
       }
     });
+  }
+
+  //level
+  levelIsComplete() {
+    let dischargedBatteries = this.board.grid
+      .filter((item) => item.child.getValue())
+      .filter(
+        (item) =>
+          item.child.getValue().className == "Battery" &&
+          item.child.getValue().state == "Discharged"
+      );
+    let isComplete =
+      dischargedBatteries.filter(
+        (item) => item.child.getValue().value.getValue() == true
+      ).length == dischargedBatteries.length;
+    return isComplete;
+  }
+  updateLevel() {
+    if (this.currentLevel + 1 < this.db.levels.length) {
+      this.currentLevel++;
+      this.levelData = this.db.levels[this.currentLevel].data;
+      this.celdSize = this.db.levels[this.currentLevel].celdSize;
+      this.gridWidth = this.db.levels[this.currentLevel].gridWidth;
+      this.gridHeight = this.db.levels[this.currentLevel].gridHeight;
+      this.templateRoot = this.createTemplate();
+      this.templateRoot.setGlovalEvents();
+
+      this.display = this.createDisplay();
+      this.controller = this.createController();
+      this.loadComponents();
+      this.loadDomInteraction();
+    }
   }
 }
