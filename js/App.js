@@ -15,7 +15,10 @@ export class App {
     this.run = false;
     this.db = db;
 
-    console.log(this.db.level1);
+    this.panelSelectedComponent = undefined;
+    this.eraser = false;
+
+    this.currentLevel = 1;
 
     this.templateRoot = this.createTemplate();
     this.templateRoot.setGlovalEvents();
@@ -48,6 +51,7 @@ export class App {
   createController() {
     return new Controller.InputController($("#canvas")[0]);
   }
+
   start() {
     this.run = true;
     this.requestAnimationFrame = requestAnimationFrame(this.loop.bind(this));
@@ -72,19 +76,19 @@ export class App {
   }
 
   getPanelComponents() {
-    if (this.db.level1.panelComponents) {
-      let datas = this.db.level1.panelComponents;
-      const celdSize = this.db.level1.celdSize;
+    if (this.db.levels[this.currentLevel].panelComponents) {
+      let _data = this.db.levels[this.currentLevel].panelComponents;
+      const celdSize = this.db.levels[this.currentLevel].celdSize;
 
-      return datas.map((data) => {
+      return _data.map((data) => {
         let result = { name: data.name };
         if (data.name == "battery") {
-          result.props = [celdSize, data.activeConections, data.value];
-          result.src = C_Battery.getImage(result.props);
+          result.props = [data.activeConections, data.value];
+          result.src = C_Battery.getImage([celdSize, ...result.props]);
         }
         if (data.name == "conectionPath") {
-          result.props = [celdSize, data.activeConections];
-          result.src = C_ConectionPath.getImage(result.props);
+          result.props = [data.activeConections];
+          result.src = C_ConectionPath.getImage([celdSize, ...result.props]);
         }
         return result;
       });
@@ -93,9 +97,9 @@ export class App {
 
   loadComponents() {
     this.board = new C_Board(
-      this.db.level1.celdSize,
-      this.db.level1.gridWidth,
-      this.db.level1.gridHeight
+      this.db.levels[this.currentLevel].celdSize,
+      this.db.levels[this.currentLevel].gridWidth,
+      this.db.levels[this.currentLevel].gridHeight
     );
     this.board.transform.setValue((transform) => {
       transform.model.translate(
@@ -106,7 +110,7 @@ export class App {
     });
     this.controller.setMouseInteraction(this.board);
 
-    this.db.level1.data.forEach((data, idx) => {
+    this.db.levels[this.currentLevel].data.forEach((data, idx) => {
       if (data.name) {
         if (data.name == "battery") {
           this.board.grid[idx].setCeld(data.name, [
@@ -120,11 +124,28 @@ export class App {
     });
 
     this.templateRoot.glovalEvents.on("selected-component", (data) => {
-      console.log(data);
+      this.panelSelectedComponent = data;
+      console.log(this.panelSelectedComponent);
+    });
+
+    this.templateRoot.glovalEvents.on("panel-click", () => {
+      this.panelSelectedComponent = undefined;
+    });
+
+    this.board.events.on("mouseDown", (event) => {
+      let celd = event.target;
+      if (this.panelSelectedComponent) {
+        celd.setCeld(
+          this.panelSelectedComponent.name,
+          this.panelSelectedComponent.props
+        );
+        this.updateCeldsState();
+      }
     });
 
     this.updateCeldsState();
   }
+
   updateCeldsState() {
     let grid = this.board.grid;
     const gridWidth = this.board.gridWidth.getValue();

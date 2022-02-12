@@ -53,6 +53,9 @@ export class C_CeldContainer extends Component {
         break;
     }
   }
+  clearCeld() {
+    this.child._value = undefined;
+  }
   loadUpdateFuncs() {
     this.events.on("mouseOver", () => {
       this.backgroundColor.r = 100;

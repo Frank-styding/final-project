@@ -8,11 +8,6 @@ import {
 } from "../modules/Engine/Display/DisplayStyle/exports.js";
 
 import C_CeldContainer from "./CeldContainer.js";
-import C_ConectionIndicator from "./Celds/ConectionIndicator.js";
-import C_ConectionPath from "./Celds/ConectionPath.js";
-
-/* import C_CeldConectionIndicator from "./Celds/CeldConectionIndicator.js";
-import C_CeldConectionPath from "./Celds/CeldConectionPath.js"; */
 
 export class C_Board extends Component {
   constructor(celd_size, grid_width, grid_height) {
