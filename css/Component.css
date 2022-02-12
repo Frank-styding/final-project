@@ -1,5 +1,6 @@
 .component {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 80px;
@@ -7,10 +8,21 @@
   border-radius: 2px;
   background-color: #323232;
 }
+
+.component.selected {
+  background-color: #535353 !important ;
+}
+.component:hover {
+  background-color: #444444;
+}
+
 .component > img {
   width: 60px;
   height: 60px;
 }
-.component:hover {
-  background-color: #444444;
+.component > .name {
+  font-family: Roboto;
+
+  bottom: -20px;
+  color: white;
 }

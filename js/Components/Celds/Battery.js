@@ -8,7 +8,10 @@ import { State } from "../../modules/Engine/exports.js";
 import C_ConectionIndicator from "./ConectionIndicator.js";
 
 export class C_Battery extends C_ConectionIndicator {
-  constructor(celdSize, activeConections) {
+  static getImage = (props) => {
+    return new C_Battery(...props).display.canvas.toDataURL("base64");
+  };
+  constructor(celdSize, activeConections, value) {
     super(
       celdSize,
       (() => {
@@ -18,7 +21,7 @@ export class C_Battery extends C_ConectionIndicator {
       })()
     );
     this.className = "Battery";
-    this.value = new State(false);
+    this.value = new State(value);
 
     this.value.onUpdate(() => {
       this.updateActiveConections();

@@ -8,6 +8,9 @@ import { State } from "../../modules/Engine/exports.js";
 import C_ConectionIndicator from "./ConectionIndicator.js";
 
 export class C_ConectionPath extends C_ConectionIndicator {
+  static getImage = (props) => {
+    return new C_ConectionPath(...props).display.canvas.toDataURL("base64");
+  };
   constructor(celdSize, activeConections = []) {
     super(
       celdSize,
@@ -17,7 +20,7 @@ export class C_ConectionPath extends C_ConectionIndicator {
         return aux;
       })()
     );
-    this.className = "C_ConectionPath";
+    this.className = "ConectionPath";
     this.value = new State(false);
 
     this.value.onUpdate(() => {

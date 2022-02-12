@@ -24,6 +24,10 @@ export class DT_Panel extends DOMTemplate {
         },
       ],
     });
+
+    this.template.on("click", (event) => {
+      this.glovalEvents.trigger("panel-click");
+    });
   }
 }
 export default DT_Panel;

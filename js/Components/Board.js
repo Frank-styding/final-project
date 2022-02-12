@@ -34,7 +34,6 @@ export class C_Board extends Component {
     this.height = new State(celd_size * grid_height);
 
     this.update();
-    this.loadUpdateFuncs();
     this.render();
 
     this.createCelds();
@@ -72,7 +71,7 @@ export class C_Board extends Component {
       }
     }
   }
-  loadUpdateFuncs() {}
+
   render() {
     const width = this.width.getValue();
     const height = this.height.getValue();

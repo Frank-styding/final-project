@@ -14,9 +14,21 @@ export class DT_Component extends DOMTemplate {
         },
       ],
     });
+
     this.data = data;
 
-    this.template.on("click", () => {
+    this.glovalEvents.on("panel-click", () => {
+      this.glovalEvents.trigger("unselect-components");
+    });
+
+    this.glovalEvents.on("unselect-components", () => {
+      this.template.removeClass("selected");
+    });
+
+    this.template.on("click", (event) => {
+      event.stopPropagation();
+      this.glovalEvents.trigger("unselect-components");
+      this.template.addClass("selected");
       this.glovalEvents.trigger("selected-component", [data, this]);
     });
   }

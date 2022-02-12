@@ -32,9 +32,7 @@ export class App {
       childs: [
         new DT_CanvasContainer(),
         new DT_Panel("Components", [
-          new DT_ComponentContainer(
-            this.getImagesSrc().map((item) => ({ src: item }))
-          ),
+          new DT_ComponentContainer(this.getPanelComponents()),
         ]),
       ],
     });
@@ -66,31 +64,54 @@ export class App {
   stop() {
     this.run = false;
   }
-  getImagesSrc() {
+
+  getImageSrc(component) {
+    if (component.display) {
+      return component.display.canvas.toDataURL("base64");
+    }
+  }
+
+  /*  getImagesSrc() {
     if (this.db.level1.panelComponents) {
       let datas = this.db.level1.panelComponents;
       const celdSize = this.db.level1.celdSize;
 
       return datas.map((data) => {
-        console.log(data.activeConections);
-        let canvas = undefined;
-        switch (data.name) {
-          case "battery":
-            canvas = new C_Battery(celdSize, data.activeConections).display
-              .canvas;
-            break;
-          case "conectionPath":
-            canvas = new C_ConectionPath(celdSize, data.activeConections)
-              .display.canvas;
-            break;
+        if (data.name == "battery") {
+          return C_Battery.getImage([
+            celdSize,
+            data.activeConections,
+            data.value,
+          ]);
         }
-        return canvas.toDataURL("base64");
+        if (data.name == "conectionPath") {
+          return C_ConectionPath.getImage([celdSize, data.activeConections]);
+        }
       });
     }
     return [];
+  } */
+  getPanelComponents() {
+    if (this.db.level1.panelComponents) {
+      let datas = this.db.level1.panelComponents;
+      const celdSize = this.db.level1.celdSize;
+
+      return datas.map((data) => {
+        let result = { name: data.name };
+        if (data.name == "battery") {
+          result.props = [celdSize, data.activeConections, data.value];
+          result.src = C_Battery.getImage(result.props);
+        }
+        if (data.name == "conectionPath") {
+          result.props = [celdSize, data.activeConections];
+          result.src = C_ConectionPath.getImage(result.props);
+        }
+        return result;
+      });
+    }
   }
+
   loadComponents() {
-    this.getImagesSrc();
     this.board = new C_Board(
       this.db.level1.celdSize,
       this.db.level1.gridWidth,
@@ -107,19 +128,165 @@ export class App {
 
     this.db.level1.data.forEach((data, idx) => {
       if (data.name) {
-        this.board.grid[idx].setCeld(data.name, [data.activeConections]);
+        if (data.name == "battery") {
+          this.board.grid[idx].setCeld(data.name, [
+            data.activeConections,
+            data.value,
+          ]);
+        } else {
+          this.board.grid[idx].setCeld(data.name, [data.activeConections]);
+        }
       }
     });
 
-    /*  this.board.grid[6].setCeld("conectionPath", [["left", "top"]]);
-    this.board.grid[3].setCeld("battery", [["top", "bottom"]]); */
+    this.templateRoot.glovalEvents.on("selected-component", (data) => {
+      console.log(data);
+    });
 
-    /* let value = true;
-    this.board.grid[6].events.on("mouseDown", () => {
-      this.board.grid[6].child.getValue().value.setValue(value);
-      this.board.grid[3].child.getValue().value.setValue(value);
+    this.updateCeldsState();
+  }
+  updateCeldsState() {
+    let grid = this.board.grid;
+    const gridWidth = this.board.gridWidth.getValue();
+    const gridHeight = this.board.gridHeight.getValue();
+    let getCeld = (x, y) => {
+      if (!(x >= 0 && y >= 0 && x < gridWidth && y < gridHeight))
+        return undefined;
+      let celd = grid[x + y * gridWidth];
+      if (celd.child.getValue()) {
+        return celd;
+      }
+      return undefined;
+    };
+    let celds = [];
+    for (let y = 0; y < gridHeight; y++) {
+      for (let x = 0; x < gridWidth; x++) {
+        let celd = getCeld(x, y);
+        if (celd) {
+          const directions = Object.keys(
+            celd.child.getValue().activeConections.getValue()
+          );
+          celds.push({
+            celd: celd.child.getValue(),
+            directions,
+            x,
+            y,
+            top: undefined,
+            bottom: undefined,
+            left: undefined,
+            right: undefined,
+          });
+        }
+      }
+    }
+    for (let celd of celds) {
+      celd.directions.forEach((direction) => {
+        switch (direction) {
+          case "top":
+            let top = celds.filter(
+              (item) => item.x == celd.x && item.y == celd.y - 1
+            );
+            if (top.length > 0 && top[0].directions.indexOf("bottom") != -1) {
+              celd.top = top[0];
+              top[0].bottom = celd;
+            }
+            break;
+          case "bottom":
+            let bottom = celds.filter(
+              (item) => item.x == celd.x && item.y == celd.y + 1
+            );
+            if (
+              bottom.length > 0 &&
+              bottom[0].directions.indexOf("top") != -1
+            ) {
+              celd.bottom = bottom[0];
+              bottom[0].top = celd;
+            }
+            break;
+          case "left":
+            let left = celds.filter(
+              (item) => item.x == celd.x - 1 && item.y == celd.y
+            );
+            if (left.length > 0 && left[0].directions.indexOf("right") != -1) {
+              celd.left = left[0];
+              left[0].right = celd;
+            }
+            break;
+          case "right":
+            let right = celds.filter(
+              (item) => item.x == celd.x + 1 && item.y == celd.y
+            );
+            if (right.length > 0 && right[0].directions.indexOf("left") != -1) {
+              celd.right = right[0];
+              right[0].left = celd;
+            }
+            break;
+        }
+      });
+    }
+    let equal = (a, b) => {
+      if (a.length != b.length) {
+        return false;
+      }
+      for (let item of a) {
+        let exits = false;
+        for (let item1 of b) {
+          if (item == item1) {
+            exits = true;
+          }
+        }
+        if (!exits) {
+          return false;
+        }
+      }
+      return true;
+    };
+    let trees = [];
+    for (let celd of celds) {
+      let list = [celd];
+      let list1 = [];
 
-      value = !value;
-    }); */
+      while (list.length > 0) {
+        let item = list.pop();
+        if (list1.indexOf(item) == -1) {
+          list1.push(item);
+          if (item.top) {
+            if (list1.indexOf(item.top) == -1) {
+              list.push(item.top);
+            }
+          }
+          if (item.bottom) {
+            if (list1.indexOf(item.bottom) == -1) {
+              list.push(item.bottom);
+            }
+          }
+          if (item.left) {
+            if (list1.indexOf(item.left) == -1) {
+              list.push(item.left);
+            }
+          }
+          if (item.right) {
+            if (list1.indexOf(item.right) == -1) {
+              list.push(item.right);
+            }
+          }
+        }
+      }
+
+      if (!trees.some((item) => equal(list1, item))) {
+        trees.push(list1);
+      }
+    }
+    trees.forEach((tree) => {
+      let activeTree =
+        tree.filter(
+          (item) =>
+            item.celd.className == "Battery" && item.celd.value.getValue()
+        ).length > 0;
+
+      tree.forEach((item) => {
+        item.celd.value.setValue(activeTree);
+      });
+    });
   }
 }
