@@ -21,6 +21,7 @@ export class App {
     this.eraser = false;
 
     const { level, data } = this.readLocalStore();
+
     this.currentLevel = level;
     this.levelData = this.db.levels[this.currentLevel].data;
     this.celdSize = this.db.levels[this.currentLevel].celdSize;
@@ -145,7 +146,7 @@ export class App {
   getPanelComponents() {
     if (this.db.levels[this.currentLevel].panelComponents) {
       let components = this.db.levels[this.currentLevel].panelComponents;
-      const celdSize = this.db.levels[this.currentLevel].celdSize;
+      const celdSize = 80;
 
       return components.map((component) => {
         let result = { name: component.name };
@@ -344,18 +345,15 @@ export class App {
     localStorage.setItem("data", JSON.stringify(this.board.getAsData()));
   }
   readLocalStore() {
-    if (
-      localStorage.getItem("level") == null &&
-      localStorage.getItem("data") == null
-    )
-      return {
-        level: 0,
-        data: [],
-      };
-
     return {
-      level: parseInt(localStorage.getItem("level")),
-      data: JSON.parse(localStorage.getItem("data")),
+      level:
+        localStorage.getItem("level") != null
+          ? parseInt(localStorage.getItem("level"))
+          : 0,
+      data:
+        localStorage.getItem("data") != null
+          ? JSON.parse(localStorage.getItem("data"))
+          : [],
     };
   }
 

@@ -1,6 +1,27 @@
 {
     "levels":[
         {
+            "gridWidth":4,
+            "gridHeight":4,
+            "celdSize":120,
+            "panelComponents":[
+                {"name":"ConectionPath","activeConections":["bottom","left"]},
+                {"name":"ConectionPath","activeConections":["top","left"]},
+                {"name":"ConectionPath","activeConections":["top","right"]},
+                {"name":"ConectionPath","activeConections":["bottom","right"]},
+                {"name":"ConectionPath","activeConections":["left","right"]},
+                {"name":"ConectionPath","activeConections":["top","bottom"]},
+                {"name":"ConectionPath","activeConections":["top","left","right"]},
+                {"name":"ConectionPath","activeConections":["top","left","right","bottom"]}
+            ],
+            "data":[
+                {},{"name":"ConectionPath","activeConections":["bottom","left"]},{},{},
+                {},{},{},{},
+                {"name":"Battery","activeConections":["top","right","bottom"],"value":true},{},{},{},
+                {},{},{},{"name":"Battery","activeConections":["top","left"],"value":false}
+            ]
+        },
+        {
             "gridWidth":5,
             "gridHeight":5,
             "celdSize":100,
@@ -32,16 +53,18 @@
                 {"name":"ConectionPath","activeConections":["bottom","right"]},
                 {"name":"ConectionPath","activeConections":["left","right"]},
                 {"name":"ConectionPath","activeConections":["top","bottom"]},
-                {"name":"ConectionPath","activeConections":["top","left","right"]}
+                {"name":"ConectionPath","activeConections":["top","left","right"]},
+                {"name":"ConectionPath","activeConections":["top","left","right","bottom"]}
             ],
             "data":[
                 {"name":"Battery","activeConections":["bottom"],"value":false},{},{},{},{},{"name":"Battery","activeConections":["bottom"],"value":true},
-                {},{},{},{},{},{},
-                {},{},{},{},{},{},
-                {},{},{},{},{},{},
-                {},{},{},{},{},{},
-                {"name":"Battery","activeConections":["top"],"value":false},{},{},{},{},{}
+                {},{},{},{"name":"ConectionPath","activeConections":["left","bottom"]},{},{},
+                {},{"name":"ConectionPath","activeConections":["top","right"]},{},{},{},{},
+                {},{},{},{},{"name":"ConectionPath","activeConections":["left","right"]},{},
+                {},{"name":"ConectionPath","activeConections":["left","bottom"]},{},{},{},{},
+                {"name":"Battery","activeConections":["top"],"value":false},{},{},{},{},{"name":"Battery","activeConections":["top"],"value":false}
             ]
         }
+        
     ]
 }
