@@ -21,7 +21,6 @@ export class App {
     this.eraser = false;
 
     const { level, data } = this.readLocalStore();
-
     this.currentLevel = level;
     this.levelData = this.db.levels[this.currentLevel].data;
     this.celdSize = this.db.levels[this.currentLevel].celdSize;
@@ -65,60 +64,6 @@ export class App {
     return new Controller.InputController($("#canvas")[0]);
   }
 
-  start() {
-    this.run = true;
-    this.requestAnimationFrame = requestAnimationFrame(this.loop.bind(this));
-  }
-  loop() {
-    this.display.clear();
-    this.board.update();
-    this.display.renderComponent(this.board);
-
-    this.display.text(
-      this.display.width / 2,
-      this.display.height - 50,
-      "level " + (this.currentLevel + 1),
-      new DisplayStyle({
-        textStyle: new TextStyle({
-          textAlign: "center",
-          textBaseline: "middle",
-          font: "30px Roboto",
-        }),
-      })
-    );
-    if (this.run) {
-      requestAnimationFrame(this.loop.bind(this));
-    }
-  }
-  stop() {
-    this.run = false;
-  }
-  reset() {
-    this.loadComponents();
-    this.loadDomInteraction();
-    this.updateCeldsState();
-  }
-
-  //load
-  getPanelComponents() {
-    if (this.db.levels[this.currentLevel].panelComponents) {
-      let components = this.db.levels[this.currentLevel].panelComponents;
-      const celdSize = this.db.levels[this.currentLevel].celdSize;
-
-      return components.map((component) => {
-        let result = { name: component.name };
-        if (component.name == "Battery") {
-          result.props = [component.activeConections, component.value];
-          result.src = C_Battery.getImage([celdSize, ...result.props]);
-        }
-        if (component.name == "ConectionPath") {
-          result.props = [component.activeConections];
-          result.src = C_ConectionPath.getImage([celdSize, ...result.props]);
-        }
-        return result;
-      });
-    }
-  }
   loadComponents() {
     this.board = new C_Board(this.celdSize, this.gridWidth, this.gridHeight);
     this.board.transform.setValue((transform) => {
@@ -145,6 +90,78 @@ export class App {
     });
     this.controller.setMouseInteraction(this.board);
   }
+  loadDomInteraction() {
+    this.templateRoot.glovalEvents.on("selected-component", (data) => {
+      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
+      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
+      this.panelSelectedComponent = data;
+      this.eraser = false;
+    });
+    this.templateRoot.glovalEvents.on("btn-reset-click", () => {
+      this.templateRoot.glovalEvents.trigger("unselect-components");
+      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
+      this.templateRoot.glovalEvents.trigger("select-reset-btn");
+      this.reset();
+    });
+    this.templateRoot.glovalEvents.on("btn-eraser-click", () => {
+      this.templateRoot.glovalEvents.trigger("unselect-components");
+      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
+      this.templateRoot.glovalEvents.trigger("select-eraser-btn");
+      this.panelSelectedComponent = undefined;
+      this.eraser = true;
+    });
+    this.templateRoot.glovalEvents.on("panel-click", () => {
+      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
+      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
+      this.panelSelectedComponent = undefined;
+      this.eraser = false;
+    });
+    this.board.events.on("mouseDown", (event) => {
+      let celd = event.target;
+      let isInitalCeld = false;
+      this.board.grid.forEach((item, idx) => {
+        if (item == celd) {
+          if (this.db.levels[this.currentLevel].data[idx].name) {
+            isInitalCeld = true;
+          }
+        }
+      });
+      if (!isInitalCeld) {
+        if (this.eraser) {
+          celd.clearCeld();
+          this.updateCeldsState();
+        }
+        if (this.panelSelectedComponent) {
+          celd.setCeld(
+            this.panelSelectedComponent.name,
+            this.panelSelectedComponent.props
+          );
+          this.updateCeldsState();
+        }
+      }
+    });
+  }
+
+  getPanelComponents() {
+    if (this.db.levels[this.currentLevel].panelComponents) {
+      let components = this.db.levels[this.currentLevel].panelComponents;
+      const celdSize = this.db.levels[this.currentLevel].celdSize;
+
+      return components.map((component) => {
+        let result = { name: component.name };
+        if (component.name == "Battery") {
+          result.props = [component.activeConections, component.value];
+          result.src = C_Battery.getImage([celdSize, ...result.props]);
+        }
+        if (component.name == "ConectionPath") {
+          result.props = [component.activeConections];
+          result.src = C_ConectionPath.getImage([celdSize, ...result.props]);
+        }
+        return result;
+      });
+    }
+  }
+
   updateCeldsState() {
     let grid = this.board.grid;
     const gridWidth = this.board.gridWidth.getValue();
@@ -280,87 +297,6 @@ export class App {
 
     this.advanceLevel();
   }
-
-  advanceLevel() {
-    if (this.levelIsComplete()) {
-      if (this.currentLevel + 1 < this.db.levels.length) {
-        this.currentLevel++;
-      } else {
-        this.currentLevel = 0;
-      }
-      this.updateLevel();
-    }
-    this.saveInLocalStorage();
-  }
-
-  loadDomInteraction() {
-    this.templateRoot.glovalEvents.on("selected-component", (data) => {
-      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
-      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
-      this.panelSelectedComponent = data;
-      this.eraser = false;
-    });
-    this.templateRoot.glovalEvents.on("btn-reset-click", () => {
-      this.templateRoot.glovalEvents.trigger("unselect-components");
-      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
-      this.templateRoot.glovalEvents.trigger("select-reset-btn");
-      this.reset();
-    });
-    this.templateRoot.glovalEvents.on("btn-eraser-click", () => {
-      this.templateRoot.glovalEvents.trigger("unselect-components");
-      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
-      this.templateRoot.glovalEvents.trigger("select-eraser-btn");
-      this.panelSelectedComponent = undefined;
-      this.eraser = true;
-    });
-    this.templateRoot.glovalEvents.on("panel-click", () => {
-      this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
-      this.templateRoot.glovalEvents.trigger("unselect-reset-btn");
-      this.panelSelectedComponent = undefined;
-      this.eraser = false;
-    });
-    this.board.events.on("mouseDown", (event) => {
-      let celd = event.target;
-      let isInitalCeld = false;
-      this.board.grid.forEach((item, idx) => {
-        if (item == celd) {
-          if (this.db.levels[this.currentLevel].data[idx].name) {
-            isInitalCeld = true;
-          }
-        }
-      });
-      if (!isInitalCeld) {
-        if (this.eraser) {
-          celd.clearCeld();
-          this.updateCeldsState();
-        }
-        if (this.panelSelectedComponent) {
-          celd.setCeld(
-            this.panelSelectedComponent.name,
-            this.panelSelectedComponent.props
-          );
-          this.updateCeldsState();
-        }
-      }
-    });
-  }
-
-  //level
-  levelIsComplete() {
-    let dischargedBatteries = this.board.grid
-      .filter((item) => item.child.getValue())
-      .filter(
-        (item) =>
-          item.child.getValue().className == "Battery" &&
-          item.child.getValue().state == "Discharged"
-      );
-    let isComplete =
-      dischargedBatteries.filter(
-        (item) => item.child.getValue().value.getValue() == true
-      ).length == dischargedBatteries.length;
-    return isComplete;
-  }
-
   updateLevel() {
     if (this.db.levels[this.currentLevel] != undefined) {
       this.levelData = this.db.levels[this.currentLevel].data;
@@ -377,12 +313,36 @@ export class App {
       this.updateCeldsState();
     }
   }
+  levelIsComplete() {
+    let dischargedBatteries = this.board.grid
+      .filter((item) => item.child.getValue())
+      .filter(
+        (item) =>
+          item.child.getValue().className == "Battery" &&
+          item.child.getValue().state == "Discharged"
+      );
+    let isComplete =
+      dischargedBatteries.filter(
+        (item) => item.child.getValue().value.getValue() == true
+      ).length == dischargedBatteries.length;
+    return isComplete;
+  }
+  advanceLevel() {
+    if (this.levelIsComplete()) {
+      if (this.currentLevel + 1 < this.db.levels.length) {
+        this.currentLevel++;
+      } else {
+        this.currentLevel = 0;
+      }
+      this.updateLevel();
+    }
+    this.saveInLocalStorage();
+  }
 
   saveInLocalStorage() {
     localStorage.setItem("level", this.currentLevel);
     localStorage.setItem("data", JSON.stringify(this.board.getAsData()));
   }
-
   readLocalStore() {
     if (
       localStorage.getItem("level") == null &&
@@ -397,5 +357,39 @@ export class App {
       level: parseInt(localStorage.getItem("level")),
       data: JSON.parse(localStorage.getItem("data")),
     };
+  }
+
+  start() {
+    this.run = true;
+    this.requestAnimationFrame = requestAnimationFrame(this.loop.bind(this));
+  }
+  loop() {
+    this.display.clear();
+    this.board.update();
+    this.display.renderComponent(this.board);
+
+    this.display.text(
+      this.display.width / 2,
+      this.display.height - 50,
+      "level " + (this.currentLevel + 1),
+      new DisplayStyle({
+        textStyle: new TextStyle({
+          textAlign: "center",
+          textBaseline: "middle",
+          font: "30px Roboto",
+        }),
+      })
+    );
+    if (this.run) {
+      requestAnimationFrame(this.loop.bind(this));
+    }
+  }
+  stop() {
+    this.run = false;
+  }
+  reset() {
+    this.loadComponents();
+    this.loadDomInteraction();
+    this.updateCeldsState();
   }
 }

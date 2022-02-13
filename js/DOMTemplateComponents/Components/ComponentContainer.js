@@ -33,11 +33,16 @@ export class DT_ComponentContainer extends DOMTemplate {
       ],
     });
 
-    this.childs[0].childs[0].template.on("click", (event) => {
+    let $eraser = this.childs[0].childs[0].template;
+    let $reset = this.childs[0].childs[1].template;
+
+    $eraser.on("click", (event) => {
       event.stopPropagation();
+
       this.glovalEvents.trigger("btn-eraser-click");
     });
-    this.childs[0].childs[1].template.on("click", (event) => {
+
+    $reset.on("click", (event) => {
       event.stopPropagation();
       this.glovalEvents.trigger("btn-reset-click");
     });

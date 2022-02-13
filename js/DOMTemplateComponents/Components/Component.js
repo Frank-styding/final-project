@@ -27,6 +27,24 @@ export class DT_Component extends DOMTemplate {
 
     this.template.on("click", (event) => {
       event.stopPropagation();
+
+      this.template.animate(
+        {
+          height: this.template.height() + 5,
+          width: this.template.height() + 5,
+        },
+        200,
+        () => {
+          this.template.animate(
+            {
+              height: this.template.height() - 5,
+              width: this.template.height() - 5,
+            },
+            200
+          );
+        }
+      );
+
       this.glovalEvents.trigger("unselect-components");
       this.template.addClass("selected");
       this.glovalEvents.trigger("selected-component", [data, this]);
