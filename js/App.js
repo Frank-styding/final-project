@@ -359,4 +359,6 @@ export class App {
       this.loadDomInteraction();
     }
   }
+
+  saveInLocalStorage() {}
 }
