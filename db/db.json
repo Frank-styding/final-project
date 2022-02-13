@@ -5,20 +5,20 @@
             "gridHeight":5,
             "celdSize":100,
             "panelComponents":[
-                {"name":"battery","activeConections":["top","left"],"value":false},
-                {"name":"conectionPath","activeConections":["bottom","left"]},
-                {"name":"conectionPath","activeConections":["top","left"]},
-                {"name":"conectionPath","activeConections":["top","right"]},
-                {"name":"conectionPath","activeConections":["bottom","right"]},
-                {"name":"conectionPath","activeConections":["left","right"]},
-                {"name":"conectionPath","activeConections":["top","bottom"]}
+                {"name":"Battery","activeConections":["top","left"],"value":false},
+                {"name":"ConectionPath","activeConections":["bottom","left"]},
+                {"name":"ConectionPath","activeConections":["top","left"]},
+                {"name":"ConectionPath","activeConections":["top","right"]},
+                {"name":"ConectionPath","activeConections":["bottom","right"]},
+                {"name":"ConectionPath","activeConections":["left","right"]},
+                {"name":"ConectionPath","activeConections":["top","bottom"]}
             ],
             "data":[
-                {},{"name":"conectionPath","activeConections":["top","right"]},{},{},{"name":"battery","activeConections":["bottom"],"value":true},
-                {},{},{},{"name":"conectionPath","activeConections":["bottom","right"]},{"name":"conectionPath","activeConections":["top","left","bottom"]},
-                {},{},{},{"name":"battery","activeConections":["left"],"value":false},{"name":"conectionPath","activeConections":["top","bottom"]},
-                {},{"name":"conectionPath","activeConections":["bottom","right","top"]},{"name":"conectionPath","activeConections":["bottom","left","right"]},{"name":"conectionPath","activeConections":["left","right"]},{"name":"conectionPath","activeConections":["top","left"]},
-                {},{"name":"conectionPath","activeConections":["top","right"]},{"name":"conectionPath","activeConections":["top","left"]},{},{}
+                {},{"name":"ConectionPath","activeConections":["top","right"]},{},{},{"name":"Battery","activeConections":["bottom"],"value":true},
+                {},{},{},{"name":"ConectionPath","activeConections":["bottom","right"]},{"name":"ConectionPath","activeConections":["top","left","bottom"]},
+                {},{},{},{"name":"Battery","activeConections":["left"],"value":false},{"name":"ConectionPath","activeConections":["top","bottom"]},
+                {},{"name":"ConectionPath","activeConections":["bottom","right","top"]},{"name":"ConectionPath","activeConections":["bottom","left","right"]},{"name":"ConectionPath","activeConections":["left","right"]},{"name":"ConectionPath","activeConections":["top","left"]},
+                {},{"name":"ConectionPath","activeConections":["top","right"]},{"name":"ConectionPath","activeConections":["top","left"]},{},{}
             ]
         },
         {
@@ -26,21 +26,21 @@
             "gridHeight":6,
             "celdSize":80,
             "panelComponents":[
-                {"name":"conectionPath","activeConections":["bottom","left"]},
-                {"name":"conectionPath","activeConections":["top","left"]},
-                {"name":"conectionPath","activeConections":["top","right"]},
-                {"name":"conectionPath","activeConections":["bottom","right"]},
-                {"name":"conectionPath","activeConections":["left","right"]},
-                {"name":"conectionPath","activeConections":["top","bottom"]},
-                {"name":"conectionPath","activeConections":["top","left","right"]}
+                {"name":"ConectionPath","activeConections":["bottom","left"]},
+                {"name":"ConectionPath","activeConections":["top","left"]},
+                {"name":"ConectionPath","activeConections":["top","right"]},
+                {"name":"ConectionPath","activeConections":["bottom","right"]},
+                {"name":"ConectionPath","activeConections":["left","right"]},
+                {"name":"ConectionPath","activeConections":["top","bottom"]},
+                {"name":"ConectionPath","activeConections":["top","left","right"]}
             ],
             "data":[
-                {"name":"battery","activeConections":["bottom"],"value":false},{},{},{},{},{"name":"battery","activeConections":["bottom"],"value":true},
+                {"name":"Battery","activeConections":["bottom"],"value":false},{},{},{},{},{"name":"Battery","activeConections":["bottom"],"value":true},
                 {},{},{},{},{},{},
                 {},{},{},{},{},{},
                 {},{},{},{},{},{},
                 {},{},{},{},{},{},
-                {"name":"battery","activeConections":["top"],"value":false},{},{},{},{},{}
+                {"name":"Battery","activeConections":["top"],"value":false},{},{},{},{},{}
             ]
         }
     ]

@@ -43,10 +43,10 @@ export class C_CeldContainer extends Component {
   setCeld(celdName, props) {
     this.child._value = undefined;
     switch (celdName) {
-      case "battery":
+      case "Battery":
         this.child.setValue(new C_Battery(this.celdSize.getValue(), ...props));
         break;
-      case "conectionPath":
+      case "ConectionPath":
         this.child.setValue(
           new C_ConectionPath(this.celdSize.getValue(), ...props)
         );
@@ -56,6 +56,12 @@ export class C_CeldContainer extends Component {
   clearCeld() {
     this.child._value = undefined;
     this.render();
+  }
+  getCeldData() {
+    if (!this.child.getValue()) return undefined;
+    return {
+      name: this.child.getValue().className,
+    };
   }
   loadUpdateFuncs() {
     this.events.on("mouseOver", () => {

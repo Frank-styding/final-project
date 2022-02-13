@@ -77,6 +77,10 @@ export class C_ConectionIndicator extends Component {
       );
     }
   }
+
+  getAsProps() {
+    return [this.activeConections.getValue()];
+  }
 }
 
 export default C_ConectionIndicator;

@@ -34,6 +34,7 @@ export class C_Board extends Component {
     this.createCelds();
     this.alignCelds();
   }
+
   createCelds() {
     const gridWidth = this.gridWidth.getValue();
     const gridHeight = this.gridHeight.getValue();
@@ -45,6 +46,26 @@ export class C_Board extends Component {
       this.addChild(celd);
     }
   }
+
+  setByData(data = []) {
+    data.forEach((item, idx) => {
+      this.grid[idx].clearCeld();
+      if (item && item != null) {
+        this.grid[idx].setCeld(item.className, item.props);
+      }
+    });
+  }
+
+  getAsData() {
+    return this.grid.map((item) => {
+      if (!item.child.getValue()) return undefined;
+      return {
+        className: item.child.getValue().className,
+        props: item.child.getValue().getAsProps(),
+      };
+    });
+  }
+
   alignCelds() {
     const gridWidth = this.gridWidth.getValue();
     const gridHeight = this.gridHeight.getValue();
@@ -66,6 +87,7 @@ export class C_Board extends Component {
       }
     }
   }
+
   render() {
     const width = this.width.getValue();
     const height = this.height.getValue();

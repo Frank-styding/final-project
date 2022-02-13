@@ -11,17 +11,18 @@ export class C_Battery extends C_ConectionIndicator {
   static getImage = (props) => {
     return new C_Battery(...props).display.canvas.toDataURL("base64");
   };
-  constructor(celdSize, activeConections, value) {
+  constructor(celdSize, nameActiveConection, value) {
     super(
       celdSize,
       (() => {
         let aux = {};
-        activeConections.forEach((item) => (aux[item] = { value: false }));
+        nameActiveConection.forEach((item) => (aux[item] = { value: false }));
         return aux;
       })()
     );
     this.className = "Battery";
     this.state = value ? "Charged" : "Discharged";
+    this.nameActiveConections = nameActiveConection;
     this.value = new State(value);
     this.loadUpdateFuncs();
     this.updateActiveConections();
@@ -45,6 +46,9 @@ export class C_Battery extends C_ConectionIndicator {
         );
       }
     }
+  }
+  getAsProps() {
+    return [this.nameActiveConections, this.value.getValue()];
   }
   render() {
     super.render();

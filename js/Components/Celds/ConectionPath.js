@@ -11,16 +11,17 @@ export class C_ConectionPath extends C_ConectionIndicator {
   static getImage = (props) => {
     return new C_ConectionPath(...props).display.canvas.toDataURL("base64");
   };
-  constructor(celdSize, activeConections = [], value = false) {
+  constructor(celdSize, nameActiveConections = [], value = false) {
     super(
       celdSize,
       (() => {
         let aux = {};
-        activeConections.forEach((item) => (aux[item] = { value: false }));
+        nameActiveConections.forEach((item) => (aux[item] = { value: false }));
         return aux;
       })()
     );
     this.className = "ConectionPath";
+    this.nameActiveConections = nameActiveConections;
     this.value = new State(value);
     this.loadUpdateFuncs();
     this.updateActiveConections();
@@ -46,6 +47,11 @@ export class C_ConectionPath extends C_ConectionIndicator {
       }
     }
   }
+
+  getAsProps() {
+    return [this.nameActiveConections, this.value.getValue()];
+  }
+
   render() {
     super.render();
     const width = this.display.width;

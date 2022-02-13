@@ -20,7 +20,9 @@ export class App {
     this.panelSelectedComponent = undefined;
     this.eraser = false;
 
-    this.currentLevel = 0;
+    const { level, data } = this.readLocalStore();
+
+    this.currentLevel = level;
     this.levelData = this.db.levels[this.currentLevel].data;
     this.celdSize = this.db.levels[this.currentLevel].celdSize;
     this.gridWidth = this.db.levels[this.currentLevel].gridWidth;
@@ -33,6 +35,10 @@ export class App {
     this.controller = this.createController();
 
     this.loadComponents();
+
+    this.board.setByData(data);
+
+    this.updateCeldsState();
     this.loadDomInteraction();
   }
 
@@ -90,22 +96,23 @@ export class App {
   reset() {
     this.loadComponents();
     this.loadDomInteraction();
+    this.updateCeldsState();
   }
 
   //load
   getPanelComponents() {
     if (this.db.levels[this.currentLevel].panelComponents) {
-      let _data = this.db.levels[this.currentLevel].panelComponents;
+      let components = this.db.levels[this.currentLevel].panelComponents;
       const celdSize = this.db.levels[this.currentLevel].celdSize;
 
-      return _data.map((data) => {
-        let result = { name: data.name };
-        if (data.name == "battery") {
-          result.props = [data.activeConections, data.value];
+      return components.map((component) => {
+        let result = { name: component.name };
+        if (component.name == "Battery") {
+          result.props = [component.activeConections, component.value];
           result.src = C_Battery.getImage([celdSize, ...result.props]);
         }
-        if (data.name == "conectionPath") {
-          result.props = [data.activeConections];
+        if (component.name == "ConectionPath") {
+          result.props = [component.activeConections];
           result.src = C_ConectionPath.getImage([celdSize, ...result.props]);
         }
         return result;
@@ -124,7 +131,7 @@ export class App {
     this.levelData.forEach((data, idx) => {
       if (data.name) {
         switch (data.name) {
-          case "battery":
+          case "Battery":
             this.board.grid[idx].setCeld(data.name, [
               data.activeConections,
               data.value,
@@ -137,7 +144,6 @@ export class App {
       }
     });
     this.controller.setMouseInteraction(this.board);
-    this.updateCeldsState();
   }
   updateCeldsState() {
     let grid = this.board.grid;
@@ -272,10 +278,21 @@ export class App {
       });
     });
 
+    this.advanceLevel();
+  }
+
+  advanceLevel() {
     if (this.levelIsComplete()) {
+      if (this.currentLevel + 1 < this.db.levels.length) {
+        this.currentLevel++;
+      } else {
+        this.currentLevel = 0;
+      }
       this.updateLevel();
     }
+    this.saveInLocalStorage();
   }
+
   loadDomInteraction() {
     this.templateRoot.glovalEvents.on("selected-component", (data) => {
       this.templateRoot.glovalEvents.trigger("unselect-eraser-btn");
@@ -343,9 +360,9 @@ export class App {
       ).length == dischargedBatteries.length;
     return isComplete;
   }
+
   updateLevel() {
-    if (this.currentLevel + 1 < this.db.levels.length) {
-      this.currentLevel++;
+    if (this.db.levels[this.currentLevel] != undefined) {
       this.levelData = this.db.levels[this.currentLevel].data;
       this.celdSize = this.db.levels[this.currentLevel].celdSize;
       this.gridWidth = this.db.levels[this.currentLevel].gridWidth;
@@ -357,8 +374,28 @@ export class App {
       this.controller = this.createController();
       this.loadComponents();
       this.loadDomInteraction();
+      this.updateCeldsState();
     }
   }
 
-  saveInLocalStorage() {}
+  saveInLocalStorage() {
+    localStorage.setItem("level", this.currentLevel);
+    localStorage.setItem("data", JSON.stringify(this.board.getAsData()));
+  }
+
+  readLocalStore() {
+    if (
+      localStorage.getItem("level") == null &&
+      localStorage.getItem("data") == null
+    )
+      return {
+        level: 0,
+        data: [],
+      };
+
+    return {
+      level: parseInt(localStorage.getItem("level")),
+      data: JSON.parse(localStorage.getItem("data")),
+    };
+  }
 }
