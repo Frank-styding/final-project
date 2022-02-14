@@ -1,12 +1,9 @@
-import { RectCollider } from "../modules/Engine/Colliders/exports.js";
-import { Component } from "../modules/Engine/Components/exports.js";
-import { State } from "../modules/Engine/exports.js";
-import {
-  DisplayStyle,
-  Color,
-  LineStyle,
-  Display,
-} from "../modules/Engine/Display/exports.js";
+import Engine from "../modules/Engine/exports.js";
+
+let State = Engine.State;
+let { Display, DisplayStyle, Color, LineStyle } = Engine.Display;
+let { Component } = Engine.Components;
+let { RectCollider } = Engine.Colliders;
 
 import C_CeldConectionPath from "./Celds/CeldConectionPath.js";
 import C_CeldBattery from "./Celds/CeldBattery.js";
