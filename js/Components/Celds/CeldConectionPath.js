@@ -3,11 +3,11 @@ import Engine from "../../modules/Engine/exports.js";
 let State = Engine.State;
 let { LineStyle, Color, DisplayStyle } = Engine.Display;
 
-import C_ConectionIndicator from "./ConectionIndicator.js";
+import C_CeldConectionIndicator from "./CeldConectionIndicator.js";
 
-export class C_ConectionPath extends C_ConectionIndicator {
+export class C_CeldConectionPath extends C_CeldConectionIndicator {
   static getImage = (props) => {
-    return new C_ConectionPath(...props).display.canvas.toDataURL("base64");
+    return new C_CeldConectionPath(...props).display.canvas.toDataURL("base64");
   };
   constructor(celdSize, nameActiveConections = [], value = false) {
     super(
@@ -75,8 +75,8 @@ export class C_ConectionPath extends C_ConectionIndicator {
           new DisplayStyle({
             fill: false,
             color: activeConections[conection].value
-              ? C_ConectionIndicator.ActiveColor
-              : C_ConectionIndicator.DesativeColor,
+              ? C_CeldConectionIndicator.ActiveColor
+              : C_CeldConectionIndicator.DesativeColor,
             lineStyle: new LineStyle({ lineWidth: 3 }),
           })
         );
@@ -86,8 +86,8 @@ export class C_ConectionPath extends C_ConectionIndicator {
           radius,
           new DisplayStyle({
             color: activeConections[conection].value
-              ? C_ConectionIndicator.ActiveColor
-              : C_ConectionIndicator.DesativeColor,
+              ? C_CeldConectionIndicator.ActiveColor
+              : C_CeldConectionIndicator.DesativeColor,
           })
         );
       }
@@ -95,4 +95,4 @@ export class C_ConectionPath extends C_ConectionIndicator {
   }
 }
 
-export default C_ConectionPath;
+export default C_CeldConectionPath;

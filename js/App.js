@@ -9,7 +9,11 @@ import {
   DT_ComponentContainer,
 } from "./DOMTemplateComponents/exports.js";
 
-import { C_Battery, C_Board, C_ConectionPath } from "./Components/exports.js";
+import {
+  C_CeldBattery,
+  C_Board,
+  C_CeldConectionPath,
+} from "./Components/exports.js";
 
 export class App {
   constructor(db) {
@@ -152,11 +156,14 @@ export class App {
         let result = { name: component.name };
         if (component.name == "Battery") {
           result.props = [component.activeConections, component.value];
-          result.src = C_Battery.getImage([celdSize, ...result.props]);
+          result.src = C_CeldBattery.getImage([celdSize, ...result.props]);
         }
         if (component.name == "ConectionPath") {
           result.props = [component.activeConections];
-          result.src = C_ConectionPath.getImage([celdSize, ...result.props]);
+          result.src = C_CeldConectionPath.getImage([
+            celdSize,
+            ...result.props,
+          ]);
         }
         return result;
       });

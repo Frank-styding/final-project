@@ -8,8 +8,8 @@ import {
   Display,
 } from "../modules/Engine/Display/exports.js";
 
-import C_ConectionPath from "./Celds/ConectionPath.js";
-import C_Battery from "./Celds/Battery.js";
+import C_CeldConectionPath from "./Celds/CeldConectionPath.js";
+import C_CeldBattery from "./Celds/CeldBattery.js";
 
 export class C_CeldContainer extends Component {
   static ActiveColor = new Color(237, 46, 46);
@@ -45,11 +45,13 @@ export class C_CeldContainer extends Component {
     this.child._value = undefined;
     switch (celdName) {
       case "Battery":
-        this.child.setValue(new C_Battery(this.celdSize.getValue(), ...props));
+        this.child.setValue(
+          new C_CeldBattery(this.celdSize.getValue(), ...props)
+        );
         break;
       case "ConectionPath":
         this.child.setValue(
-          new C_ConectionPath(this.celdSize.getValue(), ...props)
+          new C_CeldConectionPath(this.celdSize.getValue(), ...props)
         );
         break;
     }

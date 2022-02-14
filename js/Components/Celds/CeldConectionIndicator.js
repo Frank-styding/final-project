@@ -4,7 +4,7 @@ let State = Engine.State;
 let { lineStyle, Color, DisplayStyle, Display } = Engine.Display;
 let { Component } = Engine.Components;
 
-export class C_ConectionIndicator extends Component {
+export class C_CeldConectionIndicator extends Component {
   static ActiveColor = new Color(237, 46, 46);
   static DesativeColor = new Color(255, 255, 255);
   constructor(celdSize, activeConections = {}) {
@@ -30,8 +30,8 @@ export class C_ConectionIndicator extends Component {
         6,
         new DisplayStyle({
           color: activeConections.top.value
-            ? C_ConectionIndicator.ActiveColor
-            : C_ConectionIndicator.DesativeColor,
+            ? C_CeldConectionIndicator.ActiveColor
+            : C_CeldConectionIndicator.DesativeColor,
         })
       );
     }
@@ -43,8 +43,8 @@ export class C_ConectionIndicator extends Component {
         6,
         new DisplayStyle({
           color: activeConections.bottom.value
-            ? C_ConectionIndicator.ActiveColor
-            : C_ConectionIndicator.DesativeColor,
+            ? C_CeldConectionIndicator.ActiveColor
+            : C_CeldConectionIndicator.DesativeColor,
         })
       );
     }
@@ -56,8 +56,8 @@ export class C_ConectionIndicator extends Component {
         height * 0.3,
         new DisplayStyle({
           color: activeConections.right.value
-            ? C_ConectionIndicator.ActiveColor
-            : C_ConectionIndicator.DesativeColor,
+            ? C_CeldConectionIndicator.ActiveColor
+            : C_CeldConectionIndicator.DesativeColor,
         })
       );
     }
@@ -69,8 +69,8 @@ export class C_ConectionIndicator extends Component {
         height * 0.3,
         new DisplayStyle({
           color: activeConections.left.value
-            ? C_ConectionIndicator.ActiveColor
-            : C_ConectionIndicator.DesativeColor,
+            ? C_CeldConectionIndicator.ActiveColor
+            : C_CeldConectionIndicator.DesativeColor,
         })
       );
     }
@@ -81,4 +81,4 @@ export class C_ConectionIndicator extends Component {
   }
 }
 
-export default C_ConectionIndicator;
+export default C_CeldConectionIndicator;

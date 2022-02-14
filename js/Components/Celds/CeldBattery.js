@@ -3,9 +3,9 @@ import Engine from "../../modules/Engine/exports.js";
 let State = Engine.State;
 let { lineStyle, Color, DisplayStyle } = Engine.Display;
 
-import C_ConectionIndicator from "./ConectionIndicator.js";
+import C_CeldConectionIndicator from "./CeldConectionIndicator.js";
 
-export class C_CeldBattery extends C_ConectionIndicator {
+export class C_CeldBattery extends C_CeldConectionIndicator {
   static getImage = (props) => {
     return new C_Battery(...props).display.canvas.toDataURL("base64");
   };
@@ -88,8 +88,8 @@ export class C_CeldBattery extends C_ConectionIndicator {
         new DisplayStyle({
           fill: this.value.getValue(),
           color: this.value.getValue()
-            ? C_ConectionIndicator.ActiveColor
-            : C_ConectionIndicator.DesativeColor,
+            ? C_CeldConectionIndicator.ActiveColor
+            : C_CeldConectionIndicator.DesativeColor,
         }),
         true
       );
