@@ -1,15 +1,15 @@
-import C_Board from "./Components/Board.js";
-import { Display } from "./modules/Engine/Display/exports.js";
-import { Controller } from "./modules/Engine/exports.js";
-import { C_Battery } from "./Components/Celds/Battery.js";
 import { DOMTemplate } from "./modules/DOMTemplate/exports.js";
+import Engine from "./modules/Engine/exports.js";
+let { Display, DisplayStyle, TextStyle } = Engine.Display;
+let { InputController } = Engine.Controller;
 
-import DT_CanvasContainer from "./DOMTemplateComponents/CanvasContainer/CanvasContainer.js";
-import DT_Panel from "./DOMTemplateComponents/Panel/Panel.js";
-import DT_ComponentContainer from "./DOMTemplateComponents/Components/ComponentContainer.js";
-import C_ConectionPath from "./Components/Celds/ConectionPath.js";
-import DisplayStyle from "./modules/Engine/Display/DisplayStyle/DisplayStyle.js";
-import TextStyle from "./modules/Engine/Display/DisplayStyle/TextStyle.js";
+import {
+  DT_CanvasContainer,
+  DT_Panel,
+  DT_ComponentContainer,
+} from "./DOMTemplateComponents/exports.js";
+
+import { C_Battery, C_Board, C_ConectionPath } from "./Components/exports.js";
 
 export class App {
   constructor(db) {
@@ -62,7 +62,7 @@ export class App {
     });
   }
   createController() {
-    return new Controller.InputController($("#canvas")[0]);
+    return new InputController($("#canvas")[0]);
   }
 
   loadComponents() {

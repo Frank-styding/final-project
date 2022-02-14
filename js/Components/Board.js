@@ -1,11 +1,9 @@
-import { RectCollider } from "../modules/Engine/Colliders/exports.js";
-import { Component } from "../modules/Engine/Components/exports.js";
-import { State } from "../modules/Engine/exports.js";
-import {
-  DisplayStyle,
-  Color,
-  Display,
-} from "../modules/Engine/Display/exports.js";
+import Engine from "../modules/Engine/exports.js";
+
+let State = Engine.State;
+let { DisplayStyle, Color, Display } = Engine.Display;
+let { Component } = Engine.Components;
+let { RectCollider } = Engine.Colliders;
 
 import C_CeldContainer from "./CeldContainer.js";
 

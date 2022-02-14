@@ -5,7 +5,7 @@ let { lineStyle, Color, DisplayStyle } = Engine.Display;
 
 import C_ConectionIndicator from "./ConectionIndicator.js";
 
-export class C_Battery extends C_ConectionIndicator {
+export class C_CeldBattery extends C_ConectionIndicator {
   static getImage = (props) => {
     return new C_Battery(...props).display.canvas.toDataURL("base64");
   };
@@ -96,4 +96,4 @@ export class C_Battery extends C_ConectionIndicator {
     }
   }
 }
-export default C_Battery;
+export default C_CeldBattery;

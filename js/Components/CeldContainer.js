@@ -9,7 +9,7 @@ import {
 } from "../modules/Engine/Display/exports.js";
 
 import C_ConectionPath from "./Celds/ConectionPath.js";
-import { C_Battery } from "./Celds/Battery.js";
+import C_Battery from "./Celds/Battery.js";
 
 export class C_CeldContainer extends Component {
   static ActiveColor = new Color(237, 46, 46);
