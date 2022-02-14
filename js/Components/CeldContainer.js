@@ -1,12 +1,13 @@
 import { RectCollider } from "../modules/Engine/Colliders/exports.js";
 import { Component } from "../modules/Engine/Components/exports.js";
-import { Display } from "../modules/Engine/Display/exports.js";
 import { State } from "../modules/Engine/exports.js";
 import {
   DisplayStyle,
   Color,
   LineStyle,
-} from "../modules/Engine/Display/DisplayStyle/exports.js";
+  Display,
+} from "../modules/Engine/Display/exports.js";
+
 import C_ConectionPath from "./Celds/ConectionPath.js";
 import { C_Battery } from "./Celds/Battery.js";
 

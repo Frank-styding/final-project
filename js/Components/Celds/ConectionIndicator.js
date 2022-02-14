@@ -1,10 +1,8 @@
-import { State } from "../../modules/Engine/exports.js";
-import {
-  DisplayStyle,
-  Color,
-} from "../../modules/Engine/Display/DisplayStyle/exports.js";
-import Component from "../../modules/Engine/Components/Component.js";
-import { Display } from "../../modules/Engine/Display/exports.js";
+import Engine from "../../modules/Engine/exports.js";
+
+let State = Engine.State;
+let { lineStyle, Color, DisplayStyle, Display } = Engine.Display;
+let { Component } = Engine.Components;
 
 export class C_ConectionIndicator extends Component {
   static ActiveColor = new Color(237, 46, 46);

@@ -1,4 +1,3 @@
-import _Display from "./Display.js";
 import _Color from "./Color.js";
 import _Compositing from "./Compositing.js";
 import _DisplayStyle from "./DisplayStyle.js";
@@ -7,8 +6,6 @@ import _LineStyle from "./LineStyle.js";
 import _RadialGradient from "./RadialGradient.js";
 import _Shadow from "./Shadow.js";
 import _TextStyle from "./TextStyle.js";
-
-export let Display = _Display;
 
 export let Color = _Color;
 export let Compositing = _Compositing;
@@ -28,5 +25,4 @@ export default {
   RadialGradient: _RadialGradient,
   Shadow: _Shadow,
   TextStyle: _TextStyle,
-  Display: _Display,
 };

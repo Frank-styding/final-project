@@ -1,9 +1,7 @@
-import {
-  LineStyle,
-  DisplayStyle,
-  Color,
-} from "../../modules/Engine/Display/DisplayStyle/exports.js";
-import { State } from "../../modules/Engine/exports.js";
+import Engine from "../../modules/Engine/exports.js";
+
+let State = Engine.State;
+let { lineStyle, Color, DisplayStyle } = Engine.Display;
 
 import C_ConectionIndicator from "./ConectionIndicator.js";
 
