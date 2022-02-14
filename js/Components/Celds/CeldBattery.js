@@ -7,7 +7,7 @@ import C_CeldConectionIndicator from "./CeldConectionIndicator.js";
 
 export class C_CeldBattery extends C_CeldConectionIndicator {
   static getImage = (props) => {
-    return new C_Battery(...props).display.canvas.toDataURL("base64");
+    return new C_CeldBattery(...props).display.canvas.toDataURL("base64");
   };
   constructor(celdSize, nameActiveConection, value) {
     super(
